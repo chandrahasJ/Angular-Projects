@@ -1,0 +1,17 @@
+<form [formGroup]="myForm">
+  Values : {{myForm.value | json}}
+  <br/>
+  <input placeholder="email" formControlName="email"/><br/>
+  <input placeholder="messages" formControlName="messages"/><br/>
+  <select placeholder="career" formControlName="career" placeholder="Select career">      
+      <option *ngFor="let c of careerOptions" ngValue="{{c.id}}">
+          {{c.careerOption}}
+      </option>
+  </select>
+
+  <!-- <select placeholder="career" formControlName="career">
+     <option value="SD">Software Dev</option>
+     <option value="SP">Software Programmer</option>
+  </select> -->
+</form>
+

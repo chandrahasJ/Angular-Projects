@@ -1,0 +1,19 @@
+
+<!-- <table>
+    <tr>       
+         <td *ngFor="let r of appRouteData">
+            <a routerLink="{{r.path}}">{{insertSpaces(r.path)}}</a>
+        </td> 
+    </tr>
+</table> -->
+<mat-chip-list>
+    <mat-chip  color="primary"  *ngFor="let r of appRouteData">
+            <a routerLink="{{r.path}}">{{insertSpaces(r.path)}}</a>
+    </mat-chip>
+  </mat-chip-list>
+  
+<br/>
+<router-outlet></router-outlet>
+
+
+
