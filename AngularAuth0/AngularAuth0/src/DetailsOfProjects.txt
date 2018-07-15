@@ -1,0 +1,135 @@
+Major Lead from below link: 
+https://www.youtube.com/watch?v=i_dHFvi1BJc
+https://www.codeproject.com/Articles/1203649/MEAN-Stack-with-Angular-Auth-Auth-JWT-Authoriza
+https://auth0.com/docs/quickstart/spa/angular2/01-login
+
+
+npm install --save auth0-js
+npm install @auth0/angular-jwt
+
+1) To apply Routing 
+    a) We must added Router, RouteModule & ModuleWithProviders in ts files which will be implementing Routing 
+        //Routes Array
+        export const routeRepo: Routes = [
+            {
+                path : '',
+                component : HomeComponent
+            },
+            {
+                path : 'profile',
+                component : ProfileComponent,
+                canActivate : [AuthGuard]
+            }
+        ];
+
+        export const appRoutingProviders: any[] = [];
+        //This below line will bootstrap the paths & component
+        export const routing: ModuleWithProviders = RouterModule.forRoot(routeRepo);
+    We must make sure in html files routerLink attribute & router-outlet tags
+    i) routerLink = "<path>" => this attribute will be used to add paths
+    ii) router-outlet => if user clicks on routerLink then the component will be shown inside this router-outlet
+2) AuthService.ts 
+    Below link will help to intergrate the Authentication Services in the applications\
+    https://manage.auth0.com/#/applications/3X64aK46Z0RLrxWNdbE4OQkto80mZywF/quickstart
+    0) AuthService Object will injected in the all the component via Constructor which will be using the Service 
+        constructor(private auth: AuthService) { }
+    a) auth0         
+          auth0 = new auth0.WebAuth({
+                clientID: '3X64aK46Z0RLrxWNdbE4OQkto80mZywF',
+                domain: 'cjp.auth0.com',
+                responseType: 'token id_token',
+                audience: 'https://cjp.auth0.com/userinfo',
+                redirectUri: 'http://localhost:4200/callback',
+                scope: 'openid profile'
+            });
+        The Above Code will intailize the auth object
+        scope attribute spefics what all data can be collected from the users.
+    b) Handling Authentication Token :
+       Make Sure that in Root Component(i.e. AppComponent) we should must add handleAuthentication() from AuthServices       
+       handleAuthentication: looks for the result of Authentication in the URL hash. 
+       Then the result is processed with parshHash menthod from auth0.js
+       export class AppComponent {
+            title = 'app';
+            constructor(private auth: AuthService) {
+                auth.handleAuthentication();
+            }
+        }
+    c) Login & Logout : return void
+        In html page, we must use auth.login() & auth.logout()  methods as shown below
+        <a href="#" (click) = "auth.login()">Login</a>
+        <a href="#" (click) = "auth.logout()">Login</a>
+    d) isAuthenticated :  return boolean value
+       In html page, we must use auth.isAuthenticated() as shown below 
+       <a href="#" routerLink="profile" *ngIf="!auth.isAuthenicated()">Profile</a>
+3) Bootstrap : npm install --save bootstrap jquery
+    We must include the css & js file in angular.json inside "style" & "script" tags
+    This css & js file will be bundled in style tag & script.js in index files respectively.
+       "styles": [                            
+              "src/styles.css",
+              "../AngularAuth0/node_modules/bootstrap/dist/css/bootstrap.min.css"
+        ],
+        "scripts": [
+            "../AngularAuth0/node_modules/jquery/dist/jquery.min.js",
+            "../AngularAuth0/node_modules/bootstrap/dist/js/bootstrap.min.js",
+            "../AngularAuth0/node_modules/auth0-js/build/auth0.min.js"
+        ]        
+4) User Profile : In auth0 object inside AuthService we should specify "profile" in scope attribute to utilize it
+    Below Link give a detail walk through     
+    https://auth0.com/docs/quickstart/spa/angular2/02-user-profile
+    a) We need to add getProfile() inside AuthService.ts
+    b) We need to add below code inside ProfileComponent.ts
+          profile : any;
+          ngOnInit() {
+                if (this.auth.userProfile) {
+                this.profile = this.auth.userProfile;
+                } else {
+                this.auth.getProfile((err, profile) => {
+                    this.profile = profile;
+                });
+                }
+            }
+    c) We can get all the user information in html using above "profile" variable
+        profile?.picture, profile?.nickname &  {{ profile | json }}
+5) Auth.Guard.ts : AuthGuard : Restricts authorize access to component & data.
+    a) @Injectable() Annotation above the every Service.
+    b) All the service should be added in app.module.ts inside providers Arrays.
+    c) We should added canActivate, ActivatedRouteSnapshot & RouterStateSnapshot from "@angular/router"  in this service. 
+    d) We must implement canActivate interface in AuthGaurd class
+        As Shown Below
+        @Injectable()
+        export class AuthGuard implements CanActivate {
+            constructor(private route: Router, public _authservice: AuthService) {
+                console.log('const');
+            }
+
+            canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean>|Promise<boolean>|boolean {
+                const isAuth = this._authservice.isAuthenticated();
+                if ( isAuth ) {
+                    console.log('isAuth true');
+                return true;
+                } else {
+                console.log('isAuth false');
+                this.route.navigate(['/home']);
+                return false;
+                }
+            }
+        }
+    e) We must add the AuthGaurd Service class in routeRepo.ts 
+        As Shown below
+        export const routeRepo: Routes = [
+            {
+                path : '',
+                component : HomeComponent
+            },
+            {
+                path : 'profile',
+                component : ProfileComponent,
+                canActivate : [AuthGuard]
+            }
+        ];
+
+Thank You 
+
+
+
+    

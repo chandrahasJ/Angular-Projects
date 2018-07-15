@@ -1,6 +1,5 @@
-import { importType } from '@angular/compiler/src/output/output_ast';
 import { Component } from '@angular/core';
-import { YoutubeAPIKey } from '../key/YoutubeAPIKey';
+import { AuthService } from './services/auth.service';
 
 @Component({
   selector: 'app-root',
@@ -9,5 +8,7 @@ import { YoutubeAPIKey } from '../key/YoutubeAPIKey';
 })
 export class AppComponent {
   title = 'app';
-  constructor( ) {  }
+  constructor(private auth: AuthService) {
+    auth.handleAuthentication();
+  }
 }

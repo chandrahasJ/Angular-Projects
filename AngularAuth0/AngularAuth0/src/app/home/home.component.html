@@ -1,0 +1,4 @@
+<h1>Welcome To Home</h1>
+
+<div class="alert alert-success" *ngIf="auth.isAuthenticated()">You are Logged In</div>
+<div class="alert alert-success" *ngIf="!auth.isAuthenticated()">You are not Logged In. click on Login menu</div>
