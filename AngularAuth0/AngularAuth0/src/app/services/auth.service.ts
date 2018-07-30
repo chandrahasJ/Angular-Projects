@@ -11,7 +11,7 @@ import * as auth0 from 'auth0-js';
 export class AuthService {
 
   auth0 = new auth0.WebAuth({
-    clientID: '3X64aK46Z0RLrxWNdbE4OQkto80mZywF',
+    clientID: '',
     domain: 'cjp.auth0.com',
     responseType: 'token id_token',
     audience: 'https://cjp.auth0.com/userinfo',
